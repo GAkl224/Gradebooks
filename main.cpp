@@ -49,6 +49,10 @@ class Gradebook {
         vector<Assignment> assignments;
 
     public:
+
+        vector<Assignment> getAssignments(){
+            return assignments;
+        }
         void addStudent(const string& firstName, const string& lastName, const string& studentID) {
 
             students.emplace_back(firstName, lastName, studentID);
@@ -108,6 +112,44 @@ class Gradebook {
                 cout << "\n";
             }
         }
+
+    void assignment_report(const Assignment& assignment) const 
+    {
+        cout << "Assignment Report for " << assignment.name << ":\n";
+
+        cout << setw(20) << left << "Student Name" << setw(15) << right << "Score\n";
+
+        double totalScore = 0.0;
+        int totalStudents = 0;
+
+        for (const auto& student : students) {
+            cout << setw(20) << left << (student.firstName + " " + student.lastName);
+
+            // find the grade for this assignment
+            int grade = -1;
+            for (size_t i = 0; i < assignments.size(); ++i) {
+                if (assignments[i].name == assignment.name && i < student.grades.size()) {
+                    grade = student.grades[i];
+                    break;
+                }
+            }
+
+            if (grade != -1) {
+                cout << setw(15) << right << grade << endl;
+                totalScore += grade;
+                totalStudents++;
+            } else {
+                cout << setw(15) << right << "-" << endl;
+            }
+        }
+
+        if (totalStudents > 0) {
+            double averageScore = totalScore / totalStudents;
+            cout << "Average Score: " << fixed << setprecision(2) << averageScore << endl;
+        } else {
+            cout << "Average Score: -" << endl;
+        }
+    }
 };
 
 //driver
@@ -133,6 +175,13 @@ int main() {
     gradebook.giveGrade("HUG003", "Assignment 1", 88);
     gradebook.giveGrade("HUG003", "Assignment 2", 75);
     gradebook.giveGrade("HUG003", "Lab 3", 144);
+    //gradebook.giveGrade("HUG003", "Lab 8", 144);
+
+    //assignment report function
+   for (const auto& assignment : gradebook.getAssignments()) {
+       gradebook.assignment_report(assignment);
+         cout << endl;
+    }
     
 
     
